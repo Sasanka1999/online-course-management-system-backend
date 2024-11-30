@@ -1,4 +1,4 @@
-package com.onlinecoursems.dto;
+package com.sarasavi.onlineCourseMS.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

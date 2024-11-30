@@ -1,6 +1,6 @@
-package com.onlinecoursems.service;
+package com.sarasavi.onlineCourseMS.service;
 
-import com.onlinecoursems.dto.CourseMaterialDto;
+import com.sarasavi.onlineCourseMS.dto.CourseMaterialDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

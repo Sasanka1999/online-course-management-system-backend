@@ -1,4 +1,4 @@
-package com.onlinecoursems;
+package com.sarasavi.onlineCourseMS;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

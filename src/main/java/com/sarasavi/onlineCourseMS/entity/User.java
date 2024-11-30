@@ -1,4 +1,4 @@
-package com.onlinecoursems.entity;
+package com.sarasavi.onlineCourseMS.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

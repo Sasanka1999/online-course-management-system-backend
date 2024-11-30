@@ -1,11 +1,11 @@
-package com.onlinecoursems.service.impl;
+package com.sarasavi.onlineCourseMS.service.impl;
 
-import com.onlinecoursems.dto.CourseMaterialDto;
-import com.onlinecoursems.entity.Course;
-import com.onlinecoursems.entity.CourseMaterial;
-import com.onlinecoursems.repo.CourseMaterialRepo;
-import com.onlinecoursems.repo.CourseRepository;
-import com.onlinecoursems.service.CourseMaterialService;
+import com.sarasavi.onlineCourseMS.dto.CourseMaterialDto;
+import com.sarasavi.onlineCourseMS.entity.Course;
+import com.sarasavi.onlineCourseMS.entity.CourseMaterial;
+import com.sarasavi.onlineCourseMS.repo.CourseMaterialRepo;
+import com.sarasavi.onlineCourseMS.repo.CourseRepository;
+import com.sarasavi.onlineCourseMS.service.CourseMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

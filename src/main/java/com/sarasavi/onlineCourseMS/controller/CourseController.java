@@ -1,8 +1,8 @@
-package com.onlinecoursems.controller;
+package com.sarasavi.onlineCourseMS.controller;
 
-import com.onlinecoursems.dto.CourseDto;
-import com.onlinecoursems.dto.CourseWithMaterialDto;
-import com.onlinecoursems.service.CourseService;
+import com.sarasavi.onlineCourseMS.dto.CourseDto;
+import com.sarasavi.onlineCourseMS.dto.CourseWithMaterialDto;
+import com.sarasavi.onlineCourseMS.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
-package com.onlinecoursems.repo;
+package com.sarasavi.onlineCourseMS.repo;
 
-import com.onlinecoursems.entity.CourseMaterial;
+import com.sarasavi.onlineCourseMS.entity.CourseMaterial;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

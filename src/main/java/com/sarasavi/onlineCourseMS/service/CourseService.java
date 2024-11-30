@@ -1,7 +1,7 @@
-package com.onlinecoursems.service;
+package com.sarasavi.onlineCourseMS.service;
 
-import com.onlinecoursems.dto.CourseDto;
-import com.onlinecoursems.dto.CourseWithMaterialDto;
+import com.sarasavi.onlineCourseMS.dto.CourseDto;
+import com.sarasavi.onlineCourseMS.dto.CourseWithMaterialDto;
 
 import java.util.List;
 
