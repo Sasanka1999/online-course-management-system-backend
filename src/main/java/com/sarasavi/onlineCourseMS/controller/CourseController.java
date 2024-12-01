@@ -3,6 +3,7 @@ package com.sarasavi.onlineCourseMS.controller;
 import com.sarasavi.onlineCourseMS.dto.CourseDto;
 import com.sarasavi.onlineCourseMS.dto.CourseWithMaterialDto;
 import com.sarasavi.onlineCourseMS.service.CourseService;
+import com.sarasavi.onlineCourseMS.util.JwtAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,24 @@ import java.util.List;
 public class CourseController {
 
     private final CourseService courseService;
+    private final JwtAuthenticator jwtAuthenticator;
     @Autowired
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
+        this.jwtAuthenticator = new JwtAuthenticator();
     }
 
     @PostMapping
-    public ResponseEntity<CourseDto> saveCourse(@RequestBody CourseDto course) {
+    public ResponseEntity<Object> saveCourse(@RequestBody CourseDto course, @RequestHeader(name = "Authorization") String token) {
+        if (!jwtAuthenticator.validateJwtToken(token)) {
+            return new ResponseEntity<>("Invalid Token!", HttpStatus.FORBIDDEN);
+        }
+        String role = jwtAuthenticator.getRoleFromToken(token);
+
+        if (!"instructor".equalsIgnoreCase(role)) {
+            return new ResponseEntity<>("Access Denied: Only instructors can add courses!", HttpStatus.FORBIDDEN);
+        }
+
         CourseDto courseDto = courseService.saveCourse(course);
         return new ResponseEntity<>(courseDto, HttpStatus.CREATED);
     }
