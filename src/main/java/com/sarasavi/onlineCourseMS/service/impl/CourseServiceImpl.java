@@ -7,8 +7,8 @@ import com.sarasavi.onlineCourseMS.entity.Course;
 import com.sarasavi.onlineCourseMS.entity.CourseMaterial;
 import com.sarasavi.onlineCourseMS.entity.User;
 import com.sarasavi.onlineCourseMS.repo.CourseMaterialRepo;
-import com.sarasavi.onlineCourseMS.repo.CourseRepository;
-import com.sarasavi.onlineCourseMS.repo.UserRepository;
+import com.sarasavi.onlineCourseMS.repo.CourseRepo;
+import com.sarasavi.onlineCourseMS.repo.UserRepo;
 import com.sarasavi.onlineCourseMS.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +20,9 @@ import java.util.Optional;
 public class CourseServiceImpl implements CourseService {
 
     @Autowired
-    private CourseRepository courseRepo;
+    private CourseRepo courseRepo;
     @Autowired
-    private UserRepository userRepo;
+    private UserRepo userRepo;
     @Autowired
     private CourseMaterialRepo courseMaterialRepo;
 
