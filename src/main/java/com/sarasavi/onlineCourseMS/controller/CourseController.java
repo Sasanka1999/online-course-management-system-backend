@@ -33,7 +33,6 @@ public class CourseController {
         if (!"instructor".equalsIgnoreCase(role)) {
             return new ResponseEntity<>("Access Denied: Only instructors can add courses!", HttpStatus.FORBIDDEN);
         }
-
         CourseDto courseDto = courseService.saveCourse(course);
         return new ResponseEntity<>(courseDto, HttpStatus.CREATED);
     }
@@ -50,22 +49,49 @@ public class CourseController {
         return new ResponseEntity<>(allCourses, HttpStatus.OK);
     }
 
+    // Update Course (only Instructor can access)
     @PutMapping("/{courseId}")
-    public ResponseEntity<CourseDto> updateCourse(@PathVariable Integer courseId, @RequestBody CourseDto course) {
+    public ResponseEntity<Object> updateCourse(@PathVariable Integer courseId, @RequestBody CourseDto course, @RequestHeader(name = "Authorization") String token) {
+        if (!jwtAuthenticator.validateJwtToken(token)) {
+            return new ResponseEntity<>("Invalid Token!", HttpStatus.FORBIDDEN);
+        }
+        String role = jwtAuthenticator.getRoleFromToken(token);
+
+        if (!"instructor".equalsIgnoreCase(role)) {
+            return new ResponseEntity<>("Access Denied: Only instructors can update courses!", HttpStatus.FORBIDDEN);
+        }
         CourseDto courseDto = courseService.updateCourse(courseId, course);
         return new ResponseEntity<>(courseDto, HttpStatus.NO_CONTENT);
     }
 
+    // Delete Course (only Instructor can access)
     @DeleteMapping("/{courseId}")
-    public ResponseEntity<Boolean> courseDelete(@PathVariable Integer courseId){
-        boolean b = courseService.deleteCourse(courseId);
-        return new ResponseEntity<>(b, HttpStatus.NO_CONTENT);
+    public ResponseEntity<Object> courseDelete(@PathVariable Integer courseId, @RequestHeader(name = "Authorization") String token) {
+        if (!jwtAuthenticator.validateJwtToken(token)) {
+            return new ResponseEntity<>("Invalid Token!", HttpStatus.FORBIDDEN);
+        }
+        String role = jwtAuthenticator.getRoleFromToken(token);
+
+        if (!"instructor".equalsIgnoreCase(role)) {
+            return new ResponseEntity<>("Access Denied: Only instructors can delete courses!", HttpStatus.FORBIDDEN);
+        }
+        boolean isDeleted = courseService.deleteCourse(courseId);
+        return new ResponseEntity<>(isDeleted, HttpStatus.NO_CONTENT);
     }
 
+    // Add Course with Materials (only Instructor can access)
     @PostMapping("/with-materials")
-    public ResponseEntity<CourseWithMaterialDto> addCourse(@RequestBody CourseWithMaterialDto courseWithMaterialDto) {
+    public ResponseEntity<Object> addCourseWithMaterials(@RequestBody CourseWithMaterialDto courseWithMaterialDto, @RequestHeader(name = "Authorization") String token) {
+        if (!jwtAuthenticator.validateJwtToken(token)) {
+            return new ResponseEntity<>("Invalid Token!", HttpStatus.FORBIDDEN);
+        }
+        String role = jwtAuthenticator.getRoleFromToken(token);
+
+        if (!"instructor".equalsIgnoreCase(role)) {
+            return new ResponseEntity<>("Access Denied: Only instructors can add courses with materials!", HttpStatus.FORBIDDEN);
+        }
         CourseWithMaterialDto savedCourse = courseService.saveCourseWithMaterials(courseWithMaterialDto);
-        return ResponseEntity.ok(savedCourse);
+        return new ResponseEntity<>(savedCourse, HttpStatus.CREATED);
     }
 
     @GetMapping("/with-materials/{courseId}")
@@ -80,14 +106,32 @@ public class CourseController {
         return ResponseEntity.ok(courses);
     }
 
+    // Update Course with Materials (only Instructor can access)
     @PutMapping("/update-with-materials/{courseId}")
-    public ResponseEntity<CourseWithMaterialDto> updateCourse(@PathVariable Integer courseId, @RequestBody CourseWithMaterialDto courseWithMaterialDto) {
+    public ResponseEntity<Object> updateCourseWithMaterials(@PathVariable Integer courseId, @RequestBody CourseWithMaterialDto courseWithMaterialDto, @RequestHeader(name = "Authorization") String token) {
+        if (!jwtAuthenticator.validateJwtToken(token)) {
+            return new ResponseEntity<>("Invalid Token!", HttpStatus.FORBIDDEN);
+        }
+        String role = jwtAuthenticator.getRoleFromToken(token);
+
+        if (!"instructor".equalsIgnoreCase(role)) {
+            return new ResponseEntity<>("Access Denied: Only instructors can update courses with materials!", HttpStatus.FORBIDDEN);
+        }
         CourseWithMaterialDto updatedCourse = courseService.updateCourseWithMaterials(courseId, courseWithMaterialDto);
-        return ResponseEntity.ok(updatedCourse);
+        return new ResponseEntity<>(updatedCourse, HttpStatus.NO_CONTENT);
     }
 
+    // Delete Course with Materials (only Instructor can access)
     @DeleteMapping("delete-with-materials/{courseId}")
-    public ResponseEntity<Void> deleteCourseWithMatirials(@PathVariable Integer courseId) {
+    public ResponseEntity<Object> deleteCourseWithMaterials(@PathVariable Integer courseId, @RequestHeader(name = "Authorization") String token) {
+        if (!jwtAuthenticator.validateJwtToken(token)) {
+            return new ResponseEntity<>("Invalid Token!", HttpStatus.FORBIDDEN);
+        }
+        String role = jwtAuthenticator.getRoleFromToken(token);
+
+        if (!"instructor".equalsIgnoreCase(role)) {
+            return new ResponseEntity<>("Access Denied: Only instructors can delete courses with materials!", HttpStatus.FORBIDDEN);
+        }
         boolean isDeleted = courseService.deleteCourseWithMaterials(courseId);
         if (isDeleted) {
             return ResponseEntity.noContent().build();

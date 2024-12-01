@@ -117,11 +117,12 @@ public class CourseMaterialServiceImpl implements CourseMaterialService {
     }
 
     @Override
-    public void deleteCourseMaterial(Integer materialId) {
+    public boolean deleteCourseMaterial(Integer materialId) {
         CourseMaterial courseMaterial = courseMaterialRepo.findById(materialId)
                 .orElseThrow(() -> new IllegalArgumentException("Course Material not found for ID: " + materialId));
 
         courseMaterialRepo.delete(courseMaterial);
+        return false;
     }
 
     private CourseMaterialDto convertToDto(CourseMaterial material) {

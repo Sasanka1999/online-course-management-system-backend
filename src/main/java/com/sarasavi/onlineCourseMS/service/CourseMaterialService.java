@@ -14,5 +14,5 @@ public interface CourseMaterialService {
     List<CourseMaterialDto> getAllCourseMaterials(Integer courseId);
     CourseMaterialDto getCourseMaterialById(Integer courseId, Integer materialId);
     CourseMaterialDto updateCourseMaterial(Integer materialId, CourseMaterialDto courseMaterial);
-    void deleteCourseMaterial(Integer materialId);
+    boolean deleteCourseMaterial(Integer materialId);
 }
