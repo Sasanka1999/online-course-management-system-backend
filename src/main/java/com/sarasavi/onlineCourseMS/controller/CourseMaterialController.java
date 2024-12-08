@@ -15,13 +15,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/course-materials")
+@CrossOrigin("*")
 public class CourseMaterialController {
 
     private final CourseMaterialService courseMaterialService;
@@ -41,7 +43,9 @@ public class CourseMaterialController {
 
     // Upload Course Material (only Instructor can access)
     @PostMapping("/upload/{courseId}")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer courseId, @RequestHeader(name = "Authorization") String token) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
+                                             @PathVariable Integer courseId,
+                                             @RequestHeader(name = "Authorization") String token) {
         if (!jwtAuthenticator.validateJwtToken(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Token!");
         }
@@ -65,24 +69,43 @@ public class CourseMaterialController {
     @GetMapping("/download/{fileName}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
         try {
-            File file = courseMaterialService.downloadCourseMaterial(fileName);
+            // Get the current working directory, which is usually the repository root.
+            String currentDir = System.getProperty("user.dir");
 
-            if (file == null) {
+            // Construct the path to the 'uploads' folder relative to the repository root.
+            Path filePath = Paths.get(currentDir, "uploads", fileName).normalize();
+
+            System.out.println("Resolved file path: " + filePath);  // Log the resolved path for debugging
+
+            File file = filePath.toFile();
+
+            if (!file.exists()) {
+                // File not found
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
 
+            // Return the file as a resource
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
-            String contentType = "application/octet-stream";
+            // Determine the content type
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream"; // Fallback MIME type
+            }
 
+            // Return the response with the file as a download
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
                     .body(resource);
-        } catch (FileNotFoundException e) {
+
+        } catch (IOException e) {
+            // Log error and return a 404 if file not found
+            System.out.println("Error downloading file: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
 
     @GetMapping("/{courseId}")
     public ResponseEntity<List<CourseMaterialDto>> getAllCourseMaterials(@PathVariable Integer courseId) {
@@ -91,7 +114,8 @@ public class CourseMaterialController {
     }
 
     @GetMapping("/{courseId}/{materialId}")
-    public ResponseEntity<CourseMaterialDto> getCourseMaterialById(@PathVariable Integer courseId, @PathVariable Integer materialId) {
+    public ResponseEntity<CourseMaterialDto> getCourseMaterialById(@PathVariable Integer courseId,
+                                                                   @PathVariable Integer materialId) {
         try {
             CourseMaterialDto courseMaterialDto = courseMaterialService.getCourseMaterialById(courseId, materialId);
 
@@ -107,7 +131,9 @@ public class CourseMaterialController {
 
     // Update Course Material (only Instructor can access)
     @PutMapping("/{materialId}")
-    public ResponseEntity<Object> updateCourseMaterial(@PathVariable Integer materialId, @RequestBody CourseMaterialDto courseMaterial, @RequestHeader(name = "Authorization") String token) {
+    public ResponseEntity<Object> updateCourseMaterial(@PathVariable Integer materialId,
+                                                       @RequestBody CourseMaterialDto courseMaterial,
+                                                       @RequestHeader(name = "Authorization") String token) {
         if (!jwtAuthenticator.validateJwtToken(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Token!");
         }
@@ -131,7 +157,8 @@ public class CourseMaterialController {
 
     // Delete Course Material (only Instructor can access)
     @DeleteMapping("/{materialId}")
-    public ResponseEntity<Object> deleteCourseMaterial(@PathVariable Integer materialId, @RequestHeader(name = "Authorization") String token) {
+    public ResponseEntity<Object> deleteCourseMaterial(@PathVariable Integer materialId,
+                                                       @RequestHeader(name = "Authorization") String token) {
         if (!jwtAuthenticator.validateJwtToken(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Token!");
         }
