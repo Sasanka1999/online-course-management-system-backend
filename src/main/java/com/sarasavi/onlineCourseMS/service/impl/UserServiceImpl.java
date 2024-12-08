@@ -75,4 +75,18 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User not found with ID: " + userId);
         }
     }
+
+    @Override
+    public UserDto getUser(Integer userId) {
+        User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Map the User entity to UserDto
+        UserDto userDto = new UserDto();
+        userDto.setId(Long.valueOf(user.getId()));
+        userDto.setUserName(user.getUserName());
+        userDto.setRole(user.getRole());
+
+        // Return the UserDto
+        return userDto;
+    }
 }

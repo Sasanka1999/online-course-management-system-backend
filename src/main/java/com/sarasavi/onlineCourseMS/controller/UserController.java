@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/auth")
 public class UserController {
@@ -72,6 +73,12 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
         return new ResponseEntity<>("User deleted successfully!", HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}")
+    public UserDto getUser(@PathVariable Integer userId) {
+        // Call the service to get the user
+        return userService.getUser(userId);
     }
 }
 
